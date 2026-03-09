@@ -11,3 +11,28 @@ function requestMethod(): string
 {
     return strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
 }
+
+function getJsonInput(): array
+{
+    $raw = file_get_contents('php://input');
+
+    if ($raw === false || trim($raw) === '') {
+        return [];
+    }
+
+    $data = json_decode($raw, true);
+
+    return $data;
+}
+
+function requireFields(array $data, array $fields): void
+{
+    foreach ($fields as $field) {
+        if (!isset($data[$field]) || trim((string) $data[$field]) === '') {
+            jsonResponse([
+                'success' => false,
+                'message' => "Field '{$field}' is required",
+            ], 422);
+        }
+    }
+}
