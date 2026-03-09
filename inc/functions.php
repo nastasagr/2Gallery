@@ -22,6 +22,13 @@ function getJsonInput(): array
 
     $data = json_decode($raw, true);
 
+    if (!is_array($data)) {
+        jsonResponse([
+            'success' => false,
+            'message' => 'Invalid JSON body',
+        ], 400);
+    }
+
     return $data;
 }
 
