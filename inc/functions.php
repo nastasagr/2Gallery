@@ -12,6 +12,16 @@ function requestMethod(): string
     return strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
 }
 
+function requireMethod(string $method): void
+{
+    if (requestMethod() !== strtoupper($method)) {
+        jsonResponse([
+            'success' => false,
+            'message' => 'Method not allowed',
+        ], 405);
+    }
+}
+
 function getJsonInput(): array
 {
     $raw = file_get_contents('php://input');
